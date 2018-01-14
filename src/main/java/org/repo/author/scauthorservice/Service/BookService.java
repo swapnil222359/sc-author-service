@@ -18,7 +18,7 @@ public class BookService {
 
     public List<Book> getBooks(String name) {
 
-        ResponseEntity<List<Book>> list = restTemplate.exchange("http://localhost:8000/dbService/rob", HttpMethod.GET
+        ResponseEntity<List<Book>> list = restTemplate.exchange("http://book-service/dbService/rob", HttpMethod.GET
                 ,  null, new ParameterizedTypeReference<List<Book>>() {
         });
         return list.getBody();
