@@ -1,5 +1,6 @@
 package org.repo.author.scauthorservice.Service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.repo.author.scauthorservice.Model.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,6 +17,11 @@ public class BookService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private CachedDataService dataService;
+
+
+    @HystrixCommand(fallbackMethod = "getFallBackBooks")
     public List<Book> getBooks(String name) {
 
         ResponseEntity<List<Book>> list = restTemplate.exchange("http://book-service/dbService/rob", HttpMethod.GET
@@ -23,4 +29,10 @@ public class BookService {
         });
         return list.getBody();
     }
+
+    public List<Book> getFallBackBooks(String name) {
+        return dataService.getAllBooks(name);
+    }
+
+
 }
